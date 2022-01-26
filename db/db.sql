@@ -60,3 +60,44 @@ create table products(
 	updated_at TIMESTAMP(0) NOT NULL,
 	FOREIGN KEY (id_category) REFERENCES categories(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
+drop table if exists address cascade;
+create table address(
+	id BIGSERIAL PRIMARY key,
+	id_user BIGINT not null,
+	address VARCHAR(255) not null,
+	neightborhood VARCHAR(255) not null,
+	lat Decimal default 0,
+	lng Decimal default 0,
+	created_at TIMESTAMP(0) NOT NULL,
+	updated_at TIMESTAMP(0) NOT NULL,
+	FOREIGN KEY (id_user) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+DROP TABLE IF EXISTS orders CASCADE;
+CREATE TABLE orders(
+    id BIGSERIAL PRIMARY KEY,
+    id_client BIGINT NOT NULL,
+    id_delivery BIGINT NULL,
+    id_address BIGINT NOT NULL,
+    lat DECIMAL DEFAULT 0,
+    lng DECIMAL DEFAULT 0,
+    status VARCHAR8(90) NOT NULL,
+    timestamp  BIGINTNOT NULL,
+    created_at TIMESTAMP(0) NOT NULL,
+    updated_at TIMESTAMP(0) NOT NULL,
+    FOREIGN KEY(id_client) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY(id_delivery) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY(id_address) REFERENCES address(id) ON UPDATE CASCADE ON DELETE CASCADE,
+);
+
+DROP TABLE IF EXISTS order_has_products CASCADE;
+CREATE TABLE order_has_products(
+    id_order BIGINT NOT NULL,
+    id_product BIGINT NOT NULL,
+    quantity BIGINT NOT NULL,
+    created_at TIMESTAMP(0) NOT NULL,
+    updated_at TIMESTAMP(0) NOT NULL,
+    PRIMARY KEY(id_order, id_product),
+    FOREIGN KEY(id_order) REFERENCES orders(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY(id_product) REFERENCES products(id) ON UPDATE CASCADE ON DELETE CASCADE,
+);
